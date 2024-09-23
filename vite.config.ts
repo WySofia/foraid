@@ -12,8 +12,6 @@ export default defineConfig({
             "src/**/*.spec.tsx",
         ],
         coverage: {
-            reporter: ["text", "lcov"],
-            reportsDirectory: "./coverage",
             exclude: [
                 "src/components/ui/button.tsx",
                 "**/*.config.js",
