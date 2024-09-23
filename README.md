@@ -1,2 +1,5 @@
-# Foaid
-Web app to integrate with AI models for forensic representation
+# ForAid
+
+## Description
+
+Frontend for foraid project.
