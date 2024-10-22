@@ -1,11 +1,5 @@
-import { useState } from 'react';
-
-import { Button } from '@/components/ui/button';
+import AppRoutes from './routes/Routes';
 
 export const App = () => {
-    const [count, setCount] = useState(0);
-
-    return (
-        <Button onClick={() => setCount(count + 1)}>Increment {count}</Button>
-    );
+    return <AppRoutes />;
 };
