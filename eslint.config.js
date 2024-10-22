@@ -33,6 +33,8 @@ export default [
             'tsconfig.json',
             'tailwind.config.js',
             'postcss.config.js',
+            'src/components/*',
+            'src/hooks/*',
         ],
     },
     {
