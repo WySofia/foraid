@@ -44,7 +44,7 @@ const formSchema = z.object({
     canton: z.string().optional(),
 });
 
-export default function CreateCasoForm() {
+export default function CreateCasoPage() {
     const navigate = useNavigate();
     const { toast } = useToast();
 
