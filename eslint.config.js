@@ -35,6 +35,7 @@ export default [
             'postcss.config.js',
             'src/components/*',
             'src/hooks/*',
+            'src/tests/*',
         ],
     },
     {
