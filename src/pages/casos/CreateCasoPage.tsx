@@ -5,6 +5,8 @@ import * as z from 'zod';
 import { CalendarIcon, FileTextIcon, MapPinIcon } from 'lucide-react';
 import { format } from 'date-fns';
 
+import Navbar from '../components/Navbar';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -75,29 +77,107 @@ export default function CreateCasoPage() {
     }
 
     return (
-        <div className="container mx-auto p-6 max-w-3xl">
-            <Card className="w-full">
-                <CardHeader>
-                    <CardTitle className="text-3xl font-bold text-center">
-                        Crear Nuevo Caso
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-8"
-                        >
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <>
+            <Navbar />
+            <div className="container mx-auto p-6 max-w-3xl">
+                <Card className="w-full">
+                    <CardHeader>
+                        <CardTitle className="text-3xl font-bold text-center">
+                            Crear Nuevo Caso
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="space-y-8"
+                            >
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <FormField
+                                        control={form.control}
+                                        name="titulo"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Título</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Título del caso"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="fecha"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col">
+                                                <FormLabel>Fecha</FormLabel>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button
+                                                                variant={
+                                                                    'outline'
+                                                                }
+                                                                className={`w-full pl-3 text-left font-normal ${!field.value && 'text-muted-foreground'}`}
+                                                            >
+                                                                {field.value ? (
+                                                                    format(
+                                                                        field.value,
+                                                                        'PPP'
+                                                                    )
+                                                                ) : (
+                                                                    <span>
+                                                                        Seleccionar
+                                                                        fecha
+                                                                    </span>
+                                                                )}
+                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent
+                                                        className="w-auto p-0"
+                                                        align="start"
+                                                    >
+                                                        <Calendar
+                                                            mode="single"
+                                                            selected={
+                                                                field.value
+                                                            }
+                                                            onSelect={
+                                                                field.onChange
+                                                            }
+                                                            disabled={(date) =>
+                                                                date >
+                                                                    new Date() ||
+                                                                date <
+                                                                    new Date(
+                                                                        '1900-01-01'
+                                                                    )
+                                                            }
+                                                            initialFocus
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                                 <FormField
                                     control={form.control}
-                                    name="titulo"
+                                    name="descripcion"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Título</FormLabel>
+                                            <FormLabel>Descripción</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    placeholder="Título del caso"
+                                                <Textarea
+                                                    placeholder="Descripción del caso"
+                                                    className="min-h-[100px]"
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -107,204 +187,143 @@ export default function CreateCasoPage() {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="fecha"
+                                    name="id_tipo_caso"
                                     render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Fecha</FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={'outline'}
-                                                            className={`w-full pl-3 text-left font-normal ${!field.value && 'text-muted-foreground'}`}
-                                                        >
-                                                            {field.value ? (
-                                                                format(
-                                                                    field.value,
-                                                                    'PPP'
-                                                                )
-                                                            ) : (
-                                                                <span>
-                                                                    Seleccionar
-                                                                    fecha
-                                                                </span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent
-                                                    className="w-auto p-0"
-                                                    align="start"
-                                                >
-                                                    <Calendar
-                                                        mode="single"
-                                                        selected={field.value}
-                                                        onSelect={
-                                                            field.onChange
-                                                        }
-                                                        disabled={(date) =>
-                                                            date > new Date() ||
-                                                            date <
-                                                                new Date(
-                                                                    '1900-01-01'
-                                                                )
-                                                        }
-                                                        initialFocus
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
+                                        <FormItem>
+                                            <FormLabel>Tipo de Caso</FormLabel>
+                                            <Select
+                                                onValueChange={(value) =>
+                                                    field.onChange(
+                                                        parseInt(value)
+                                                    )
+                                                }
+                                                defaultValue={field.value.toString()}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Seleccionar tipo de caso" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="1">
+                                                        Tipo 1
+                                                    </SelectItem>
+                                                    <SelectItem value="2">
+                                                        Tipo 2
+                                                    </SelectItem>
+                                                    <SelectItem value="3">
+                                                        Tipo 3
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-                            </div>
-                            <FormField
-                                control={form.control}
-                                name="descripcion"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Descripción</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Descripción del caso"
-                                                className="min-h-[100px]"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="id_tipo_caso"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Tipo de Caso</FormLabel>
-                                        <Select
-                                            onValueChange={(value) =>
-                                                field.onChange(parseInt(value))
-                                            }
-                                            defaultValue={field.value.toString()}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Seleccionar tipo de caso" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="1">
-                                                    Tipo 1
-                                                </SelectItem>
-                                                <SelectItem value="2">
-                                                    Tipo 2
-                                                </SelectItem>
-                                                <SelectItem value="3">
-                                                    Tipo 3
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-semibold flex items-center">
-                                    <MapPinIcon className="mr-2" />
-                                    Ubicación
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <FormField
-                                        control={form.control}
-                                        name="calle_principal"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    Calle Principal
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder="Calle principal"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="calle_secundaria"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    Calle Secundaria
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder="Calle secundaria"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="provincia"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Provincia</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder="Provincia"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="canton"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Cantón</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder="Cantón"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                <div className="space-y-4">
+                                    <h3 className="text-lg font-semibold flex items-center">
+                                        <MapPinIcon className="mr-2" />
+                                        Ubicación
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <FormField
+                                            control={form.control}
+                                            name="calle_principal"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Calle Principal
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder="Calle principal"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="calle_secundaria"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Calle Secundaria
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder="Calle secundaria"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="provincia"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Provincia
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder="Provincia"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="canton"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Cantón
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder="Cantón"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex justify-between pt-6">
-                                <Button type="submit" className="w-full mr-4">
-                                    <FileTextIcon className="mr-2 h-4 w-4" />{' '}
-                                    Crear Caso
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    className="w-full"
-                                    onClick={() =>
-                                        navigate('/create-identikit')
-                                    }
-                                >
-                                    Crear Identikit
-                                </Button>
-                            </div>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-        </div>
+                                <div className="flex justify-between pt-6">
+                                    <Button
+                                        type="submit"
+                                        className="w-full mr-4"
+                                    >
+                                        <FileTextIcon className="mr-2 h-4 w-4" />{' '}
+                                        Crear Caso
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="w-full"
+                                        onClick={() =>
+                                            navigate('/create-identikit')
+                                        }
+                                    >
+                                        Crear Identikit
+                                    </Button>
+                                </div>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+            </div>
+        </>
     );
 }

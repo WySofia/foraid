@@ -117,7 +117,7 @@ export default function Navbar() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
                                 <Link
-                                    to="/casos"
+                                    to="/create-caso"
                                     className="flex items-center space-x-2"
                                 >
                                     Nuevo caso
@@ -125,7 +125,7 @@ export default function Navbar() {
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Link
-                                    to="/identikits"
+                                    to="/create-identikit"
                                     className="flex items-center space-x-2"
                                 >
                                     Nuevo indentikit

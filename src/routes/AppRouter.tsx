@@ -7,6 +7,7 @@ import AuthPage from '../pages/auth/AuthPage';
 import ProtectedRoute from './ProtectedRoute';
 
 import GalleryCasoPage from '@/pages/casos/GalleryCasoPage';
+import CreateCasoPage from '@/pages/casos/CreateCasoPage';
 
 const AppRouter: React.FC = () => {
     return (
@@ -17,6 +18,10 @@ const AppRouter: React.FC = () => {
 
             <Route element={<ProtectedRoute />}>
                 <Route path="/casos" element={<GalleryCasoPage />} />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+                <Route path="/create-caso" element={<CreateCasoPage />} />
             </Route>
 
             <Route path="*" element={<div>404 Not Found</div>} />
