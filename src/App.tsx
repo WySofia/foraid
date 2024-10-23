@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
+import AppRouter from '@/routes/AppRouter';
+import { AuthProvider } from '@/context/AuthContext';
 
-export const App = () => {
-    const [count, setCount] = useState(0);
-
+export const App: React.FC = () => {
     return (
-        <Button onClick={() => setCount(count + 1)}>Increment {count}</Button>
+        <AuthProvider>
+            <Router>
+                <AppRouter />
+            </Router>
+        </AuthProvider>
     );
 };
