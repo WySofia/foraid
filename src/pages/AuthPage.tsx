@@ -1,5 +1,10 @@
+/* eslint-disable react/jsx-no-leaked-render */
+// src/pages/AuthPage.tsx
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -21,15 +26,70 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
-export default function AuthPage() {
+const AuthPage: React.FC = () => {
+    const { signin, signup, errors } = useAuth();
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<string>('login');
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    // Estado para manejar los campos del formulario de login
+    const [loginData, setLoginData] = useState({
+        email: '',
+        password: '',
+    });
+
+    // Estado para manejar los campos del formulario de registro
+    const [registerData, setRegisterData] = useState({
+        nombre: '',
+        apellido: '',
+        correo: '',
+        contrasenia: '',
+        cargo: '',
+        rango: '',
+    });
+
+    // Manejador de envío para el formulario de login
+    const handleLoginSubmit = async (
+        event: React.FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault();
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setIsLoading(false);
+        try {
+            await signin({
+                correo: loginData.email,
+                contrasenia_hash: loginData.password,
+            });
+            navigate('/dashboard'); // Ruta protegida a la que redirigir
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error: unknown) {
+            // TODO: SET TOAST
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Manejador de envío para el formulario de registro
+    const handleRegisterSubmit = async (
+        event: React.FormEvent<HTMLFormElement>
+    ) => {
+        event.preventDefault();
+        setIsLoading(true);
+        try {
+            await signup({
+                nombre: registerData.nombre,
+                apellido: registerData.apellido,
+                correo: registerData.correo,
+                contrasenia_hash: registerData.contrasenia,
+                cargo: registerData.cargo,
+                rango: registerData.rango,
+            });
+            navigate('/dashboard');
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error: unknown) {
+            // TODO: SET TOAST
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const containerVariants = {
@@ -81,7 +141,7 @@ export default function AuthPage() {
                         exit="hidden"
                         variants={switchVariants}
                     >
-                        {activeTab === 'login' ? (
+                        {activeTab === 'login' && (
                             <TabsContent value="login">
                                 <Card>
                                     <CardHeader>
@@ -91,7 +151,14 @@ export default function AuthPage() {
                                             acceder a tu cuenta.
                                         </CardDescription>
                                     </CardHeader>
-                                    <form onSubmit={handleSubmit}>
+                                    {errors.length > 0 && (
+                                        <div className="mb-4 p-2 bg-red-200 text-red-800 rounded">
+                                            {errors.map((error, index) => (
+                                                <p key={index}>{error}</p>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <form onSubmit={handleLoginSubmit}>
                                         <motion.div
                                             variants={containerVariants}
                                             initial="hidden"
@@ -110,6 +177,14 @@ export default function AuthPage() {
                                                         type="email"
                                                         placeholder="m@ejemplo.com"
                                                         required
+                                                        value={loginData.email}
+                                                        onChange={(e) =>
+                                                            setLoginData({
+                                                                ...loginData,
+                                                                email: e.target
+                                                                    .value,
+                                                            })
+                                                        }
                                                     />
                                                 </motion.div>
                                                 <motion.div
@@ -123,6 +198,17 @@ export default function AuthPage() {
                                                         id="password"
                                                         type="password"
                                                         required
+                                                        value={
+                                                            loginData.password
+                                                        }
+                                                        onChange={(e) =>
+                                                            setLoginData({
+                                                                ...loginData,
+                                                                password:
+                                                                    e.target
+                                                                        .value,
+                                                            })
+                                                        }
                                                     />
                                                 </motion.div>
                                             </CardContent>
@@ -166,8 +252,8 @@ export default function AuthPage() {
                                     </form>
                                 </Card>
                             </TabsContent>
-                        ) : null}
-                        {activeTab === 'register' ? (
+                        )}
+                        {activeTab === 'register' && (
                             <TabsContent value="register">
                                 <Card>
                                     <CardHeader>
@@ -176,7 +262,14 @@ export default function AuthPage() {
                                             Crea una cuenta para comenzar.
                                         </CardDescription>
                                     </CardHeader>
-                                    <form onSubmit={handleSubmit}>
+                                    {errors.length > 0 && (
+                                        <div className="mb-4 p-2 bg-red-200 text-red-800 rounded">
+                                            {errors.map((error, index) => (
+                                                <p key={index}>{error}</p>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <form onSubmit={handleRegisterSubmit}>
                                         <motion.div
                                             variants={containerVariants}
                                             initial="hidden"
@@ -195,6 +288,19 @@ export default function AuthPage() {
                                                             id="nombre"
                                                             placeholder="Juan"
                                                             required
+                                                            value={
+                                                                registerData.nombre
+                                                            }
+                                                            onChange={(e) =>
+                                                                setRegisterData(
+                                                                    {
+                                                                        ...registerData,
+                                                                        nombre: e
+                                                                            .target
+                                                                            .value,
+                                                                    }
+                                                                )
+                                                            }
                                                         />
                                                     </div>
                                                     <div className="space-y-1">
@@ -205,6 +311,20 @@ export default function AuthPage() {
                                                             id="apellido"
                                                             placeholder="Pérez"
                                                             required
+                                                            value={
+                                                                registerData.apellido
+                                                            }
+                                                            onChange={(e) =>
+                                                                setRegisterData(
+                                                                    {
+                                                                        ...registerData,
+                                                                        apellido:
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                    }
+                                                                )
+                                                            }
                                                         />
                                                     </div>
                                                 </motion.div>
@@ -220,6 +340,16 @@ export default function AuthPage() {
                                                         type="email"
                                                         placeholder="m@ejemplo.com"
                                                         required
+                                                        value={
+                                                            registerData.correo
+                                                        }
+                                                        onChange={(e) =>
+                                                            setRegisterData({
+                                                                ...registerData,
+                                                                correo: e.target
+                                                                    .value,
+                                                            })
+                                                        }
                                                     />
                                                 </motion.div>
                                                 <motion.div
@@ -233,6 +363,17 @@ export default function AuthPage() {
                                                         id="contrasenia"
                                                         type="password"
                                                         required
+                                                        value={
+                                                            registerData.contrasenia
+                                                        }
+                                                        onChange={(e) =>
+                                                            setRegisterData({
+                                                                ...registerData,
+                                                                contrasenia:
+                                                                    e.target
+                                                                        .value,
+                                                            })
+                                                        }
                                                     />
                                                 </motion.div>
                                                 <motion.div
@@ -245,6 +386,16 @@ export default function AuthPage() {
                                                     <Input
                                                         id="cargo"
                                                         placeholder="Desarrollador"
+                                                        value={
+                                                            registerData.cargo
+                                                        }
+                                                        onChange={(e) =>
+                                                            setRegisterData({
+                                                                ...registerData,
+                                                                cargo: e.target
+                                                                    .value,
+                                                            })
+                                                        }
                                                     />
                                                 </motion.div>
                                                 <motion.div
@@ -254,7 +405,19 @@ export default function AuthPage() {
                                                     <Label htmlFor="rango">
                                                         Rango
                                                     </Label>
-                                                    <Select>
+                                                    <Select
+                                                        value={
+                                                            registerData.rango
+                                                        }
+                                                        onValueChange={(
+                                                            value
+                                                        ) =>
+                                                            setRegisterData({
+                                                                ...registerData,
+                                                                rango: value,
+                                                            })
+                                                        }
+                                                    >
                                                         <SelectTrigger>
                                                             <SelectValue placeholder="Selecciona un rango" />
                                                         </SelectTrigger>
@@ -312,10 +475,11 @@ export default function AuthPage() {
                                     </form>
                                 </Card>
                             </TabsContent>
-                        ) : null}
+                        )}
                     </motion.div>
                 </AnimatePresence>
             </Tabs>
         </div>
     );
-}
+};
+export default AuthPage;
