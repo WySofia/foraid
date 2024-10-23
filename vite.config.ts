@@ -45,6 +45,8 @@ export default defineConfig({
                 'src/main.tsx',
                 'src/index.tsx',
                 'src/App.tsx',
+                'src/**/*.test.ts',
+                'src/pages/**',
             ],
         },
     },
